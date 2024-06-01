@@ -1,0 +1,7 @@
+﻿runtime: aspnetcore
+env: flex
+
+# App Engine uses port 8080 by default
+handlers:
+- url: /.*
+  script: auto

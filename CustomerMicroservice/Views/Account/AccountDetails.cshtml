@@ -1,0 +1,32 @@
+﻿@model CustomerMicroservice.Models.User
+
+@{
+    ViewData["Title"] = "Account Details";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <h4>User Details</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            First Name
+        </dt>
+        <dd class="col-sm-10">
+            @Model.FirstName
+        </dd>
+        <dt class="col-sm-2">
+            Last Name
+        </dt>
+        <dd class="col-sm-10">
+            @Model.LastName
+        </dd>
+        <dt class="col-sm-2">
+            Email
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Email
+        </dd>
+    </dl>
+</div>

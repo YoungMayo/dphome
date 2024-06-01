@@ -1,0 +1,54 @@
+﻿@model IEnumerable<OrderMicroservice.Models.WatchlistItem>
+
+@{
+    ViewData["Title"] = "Watchlist";
+}
+
+<h2>Watchlist</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Movie Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.MovieName</td>
+                <td>
+                    <form asp-action="RemoveFromWatchlist" method="post">
+                        <input type="hidden" name="MovieName" value="@item.MovieName" />
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Anti-forgery token as a hidden field -->
+@Html.AntiForgeryToken()
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var token = $('input[name="__RequestVerificationToken"]').val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("CleanUpWatchlist", "Watchlist")',
+                data: {
+                    __RequestVerificationToken: token
+                },
+                success: function (result) {
+                    location.reload(); // Reload the page to reflect changes
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error cleaning up watchlist: ", error);
+                }
+            });
+        });
+    </script>
+}

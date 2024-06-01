@@ -1,0 +1,39 @@
+﻿@model IEnumerable<VideoCatalogueMicroservice.Models.Video>
+
+@{
+    ViewData["Title"] = "Video Catalogue";
+}
+
+<h2>Video Catalogue</h2>
+
+<form asp-action="Index" method="post">
+    <label for="genre">Enter Genre:</label>
+    <input type="text" id="genre" name="genre" required />
+    <button type="submit">Search</button>
+</form>
+
+@if (Model != null && Model.Any())
+{
+    <ul>
+        @foreach (var video in Model)
+        {
+            <li>
+                <h3>@video.Title (@video.ReleaseYear)</h3>
+                <p>@video.Description</p>
+                @if (!string.IsNullOrEmpty(video.ImageUrl))
+                {
+                    <img src="@video.ImageUrl" alt="@video.Title" style="width:150px;" />
+                }
+                <a asp-controller="VideoCatalogue" asp-action="Details" asp-route-id="@video.Id">View Details</a>
+                <form asp-action="AddToWatchlist" asp-controller="Watchlist" method="post" style="display:inline;">
+                    <input type="hidden" name="movieName" value="@video.Title" />
+                    <button type="submit" class="btn btn-secondary">Add to Watchlist</button>
+                </form>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No videos found.</p>
+}

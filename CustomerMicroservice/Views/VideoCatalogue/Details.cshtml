@@ -1,0 +1,19 @@
+﻿@model VideoCatalogueMicroservice.Models.Video
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<h2>@Model.Title (@Model.ReleaseYear)</h2>
+
+<p>@Model.Description</p>
+
+@if (!string.IsNullOrEmpty(Model.ImageUrl))
+{
+    <img src="@Model.ImageUrl" alt="@Model.Title" style="width:300px;" />
+}
+
+<form asp-action="AddToWatchlist" asp-controller="Watchlist" method="post" style="margin-top: 20px;">
+    <input type="hidden" name="movieName" value="@Model.Title" />
+    <button type="submit" class="btn btn-primary">Add to Watchlist</button>
+</form>

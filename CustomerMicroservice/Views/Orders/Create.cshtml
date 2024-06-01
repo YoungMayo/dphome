@@ -1,0 +1,85 @@
+﻿@model OrderMicroservice.Models.Order
+
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<h1>Create Order</h1>
+
+<h4>Order</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" id="orderForm">
+            <div class="form-group">
+                <label asp-for="UserEmail" class="control-label"></label>
+                <input asp-for="UserEmail" class="form-control" />
+                <span asp-validation-for="UserEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MovieName" class="control-label"></label>
+                <input asp-for="MovieName" class="form-control" id="MovieName" autocomplete="off" />
+                <span asp-validation-for="MovieName" class="text-danger"></span>
+                <ul id="movieSuggestions" class="list-group"></ul>
+            </div>
+            <div class="form-group">
+                <label asp-for="Copies" class="control-label"></label>
+                <input asp-for="Copies" class="form-control" />
+                <span asp-validation-for="Copies" class="text-danger"></span>
+            </div>
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            var validMovieNames = [];
+
+            $("#MovieName").on("input", function () {
+                var query = $(this).val();
+                if (query.length > 2) {
+                    $.ajax({
+                        url: '@Url.Action("SearchMovies", "VideoCatalogue")',
+                        data: { query: query },
+                        success: function (data) {
+                            validMovieNames = data.map(function (movie) {
+                                return movie.titleText.text;
+                            });
+
+                            if (validMovieNames.length > 0) {
+                                var suggestions = data.map(function (movie) {
+                                    return '<li class="list-group-item movie-suggestion" data-title="' + movie.titleText.text + '">' + movie.titleText.text + ' (' + movie.releaseYear.year + ')</li>';
+                                }).join('');
+                                $("#movieSuggestions").html(suggestions).show();
+                            } else {
+                                $("#movieSuggestions").html('<li class="list-group-item">No suggestions found</li>').show();
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.error("Error fetching movie suggestions:", textStatus, errorThrown);
+                        }
+                    });
+                } else {
+                    $("#movieSuggestions").hide();
+                }
+            });
+
+            $("#movieSuggestions").on("click", "li", function () {
+                var selectedTitle = $(this).data('title');
+                $("#MovieName").val(selectedTitle);
+                $("#movieSuggestions").hide();
+            });
+
+            $("#orderForm").on("submit", function (e) {
+                var movieName = $("#MovieName").val();
+                if (!validMovieNames.includes(movieName)) {
+                    alert("Please select a valid movie name from the suggestions.");
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+}

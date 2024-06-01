@@ -1,0 +1,31 @@
+﻿@model IEnumerable<OrderMicroservice.Models.Order>
+
+@{
+    ViewData["Title"] = "Paid Orders";
+}
+
+<h1>Paid Orders</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>User Email</th>
+            <th>Movie Name</th>
+            <th>Date and Time of Payment</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.UserEmail</td>
+                <td>@order.MovieName</td>
+                <td>@order.DateTimeOfPayment?.ToString("g")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Index" asp-controller="Home">Back to Home</a>
+</div>

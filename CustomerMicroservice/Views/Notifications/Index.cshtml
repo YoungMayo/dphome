@@ -1,0 +1,35 @@
+﻿@model List<CustomerMicroservice.Models.Notification>
+
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Message</th>
+            <th>Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var notification in Model)
+        {
+            <tr class="@(notification.IsRead ? "table-secondary" : "")">
+                <td>@notification.Message</td>
+                <td>@notification.CreatedAt</td>
+                <td>
+                    @if (!notification.IsRead)
+                    {
+                        <form asp-action="MarkAsRead" method="post">
+                            <input type="hidden" name="notificationId" value="@notification.Id" />
+                            <button type="submit" class="btn btn-primary btn-sm">Mark as Read</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
